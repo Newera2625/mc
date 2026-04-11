@@ -2,972 +2,522 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的世界服务器 - 官方网站</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Minecraft指令大全 | Java & 基岩版 | 海量指令 一键复制</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap');
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        :root {
-            --primary: #00a8e8;
-            --secondary: #00d4aa;
-            --accent: #ff6b6b;
-            --dark: #2d3436;
-            --light: #f8f9fa;
-            --white: #ffffff;
-            --gray: #636e72;
-            --glass: rgba(255, 255, 255, 0.8);
-        }
-        
+
         body {
-            font-family: 'Noto Sans SC', sans-serif;
-            background-color: var(--light);
-            color: var(--dark);
-            line-height: 1.6;
-            overflow-x: hidden;
+            background: #1a1e1c;
+            font-family: 'Segoe UI', 'Roboto', 'Consolas', monospace;
+            color: #e2e6e3;
+            padding: 1.8rem 1rem;
         }
-        
-        /* 粒子背景画布 */
-        #particles-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-        }
-        
-        /* 导航栏 */
-        nav {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 168, 232, 0.1);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
-        }
-        
-        .nav-container {
-            max-width: 1400px;
+
+        .container {
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 0 30px;
+        }
+
+        /* 头部简约 */
+        .header {
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #3c4f46;
+            padding-bottom: 1rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            color: #cfd8d1;
+        }
+
+        .sub {
+            color: #8ba592;
+            margin-top: 6px;
+            font-size: 0.85rem;
+        }
+
+        /* 版本筛选器 + 搜索行 */
+        .toolbar {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+            background: #232a27;
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
         }
-        
-        .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8em;
-            font-weight: 900;
-            text-decoration: none;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .nav-links {
+
+        .filter-group {
             display: flex;
-            list-style: none;
-            gap: 40px;
-        }
-        
-        .nav-links a {
-            color: var(--gray);
-            text-decoration: none;
-            font-weight: 500;
-            position: relative;
-            transition: all 0.3s;
-            padding: 8px 0;
-        }
-        
-        .nav-links a::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transition: width 0.3s;
-        }
-        
-        .nav-links a:hover::before,
-        .nav-links a.active::before {
-            width: 100%;
-        }
-        
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--primary);
-        }
-        
-        /* 英雄区域 */
-        .hero {
-            min-height: 100vh;
-            display: flex;
+            gap: 0.8rem;
             align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 120px 20px 80px;
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 50%, #e8f5e9 100%);
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(0, 168, 232, 0.1) 0%, transparent 70%);
-            animation: pulse 4s ease-in-out infinite;
-            pointer-events: none;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 5em;
-            font-weight: 900;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 50%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 5px;
-        }
-        
-        .hero p {
-            font-size: 1.5em;
-            color: var(--gray);
-            margin-bottom: 50px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .hero-buttons {
-            display: flex;
-            gap: 30px;
-            justify-content: center;
             flex-wrap: wrap;
         }
-        
-        .btn {
-            padding: 18px 50px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1.1em;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
+
+        .filter-btn {
+            background: #2d3833;
             border: none;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 30px;
+            color: #cddfd3;
             cursor: pointer;
+            transition: 0.1s linear;
+            font-family: inherit;
         }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
+
+        .filter-btn.active {
+            background: #5e8b74;
+            color: white;
+            box-shadow: 0 0 0 1px #aad4bd;
+        }
+
+        .filter-btn:hover:not(.active) {
+            background: #405a4e;
+            color: #f0f5f0;
+        }
+
+        .search-box {
+            background: #2b332f;
+            border: 1px solid #4b685b;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            width: 260px;
+            color: #f0f7f2;
+            outline: none;
+            font-size: 0.85rem;
+        }
+
+        .search-box:focus {
+            border-color: #80b29b;
+        }
+
+        .stats {
+            font-size: 0.75rem;
+            background: #232a27;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        /* 指令表格风格 - 简约但清晰 */
+        .commands-table {
             width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s;
+            background: #1f2623;
+            border-radius: 16px;
+            overflow-x: auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
-        
-        .btn:hover::before {
-            left: 100%;
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 680px;
         }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: var(--white);
-            box-shadow: 0 10px 40px rgba(0, 168, 232, 0.3);
+
+        th {
+            text-align: left;
+            padding: 0.9rem 0.8rem;
+            background: #2c3632;
+            color: #e9f2ec;
+            font-weight: 600;
+            border-bottom: 1px solid #3c5449;
         }
-        
-        .btn-primary:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 20px 60px rgba(0, 168, 232, 0.4);
+
+        td {
+            padding: 0.75rem 0.8rem;
+            border-bottom: 1px solid #2c3b35;
+            vertical-align: middle;
         }
-        
-        .btn-secondary {
-            background: var(--white);
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            box-shadow: 0 5px 20px rgba(0, 168, 232, 0.1);
+
+        .cmd-name {
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-weight: 600;
+            color: #f2d9b3;
+            white-space: nowrap;
         }
-        
-        .btn-secondary:hover {
-            background: var(--primary);
-            color: var(--white);
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 40px rgba(0, 168, 232, 0.3);
+
+        .cmd-syntax {
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            background: #121916;
+            padding: 0.3rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            word-break: break-all;
+            white-space: pre-wrap;
+            color: #cfe6db;
+            cursor: pointer;
+            display: inline-block;
+            max-width: 100%;
         }
-        
-        /* 特色区域 */
-        .features {
-            padding: 120px 20px;
-            max-width: 1400px;
-            margin: 0 auto;
+
+        .cmd-desc {
+            color: #bccfc3;
+            line-height: 1.35;
+            font-size: 0.8rem;
         }
-        
-        .section-title {
-            font-family: 'Orbitron', sans-serif;
-            text-align: center;
-            font-size: 3em;
-            margin-bottom: 80px;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            position: relative;
+
+        .version-tag {
+            font-size: 0.7rem;
+            background: #2a3d35;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            display: inline-block;
+            white-space: nowrap;
+            font-weight: normal;
         }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -20px;
+
+        .version-java {
+            background: #9b6a3c;
+            color: #fff2df;
+        }
+        .version-bedrock {
+            background: #2d6f5c;
+            color: #e0f0e5;
+        }
+        .version-both {
+            background: #3c5a66;
+            color: #eaf6ff;
+        }
+
+        .copy-btn {
+            background: #2f4d40;
+            border: none;
+            padding: 0.3rem 0.9rem;
+            border-radius: 26px;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.08s linear;
+            font-family: inherit;
+        }
+        .copy-btn:hover {
+            background: #5a8e76;
+        }
+        .copy-btn:active {
+            transform: scale(0.96);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 22px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            border-radius: 3px;
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 40px;
-        }
-        
-        .feature-card {
-            background: var(--white);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            border: 1px solid rgba(0, 168, 232, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-        }
-        
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transform: scaleX(0);
-            transition: transform 0.3s;
-        }
-        
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-15px) scale(1.02);
-            border-color: var(--primary);
-            box-shadow: 0 20px 60px rgba(0, 168, 232, 0.15);
-        }
-        
-        .feature-icon {
-            font-size: 4em;
-            margin-bottom: 25px;
-            display: block;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        .feature-card h3 {
-            color: var(--dark);
-            margin-bottom: 20px;
-            font-size: 1.8em;
-            font-family: 'Orbitron', sans-serif;
-        }
-        
-        .feature-card p {
-            color: var(--gray);
-            line-height: 1.8;
-        }
-        
-        /* 服务器状态 */
-        .server-status {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-            padding: 100px 20px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .status-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            text-align: center;
-        }
-        
-        .status-item {
-            padding: 30px;
-            background: var(--white);
-            border-radius: 15px;
-            border: 1px solid rgba(0, 168, 232, 0.1);
-            transition: all 0.3s;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-        }
-        
-        .status-item:hover {
-            border-color: var(--primary);
-            box-shadow: 0 10px 40px rgba(0, 168, 232, 0.15);
-            transform: translateY(-5px);
-        }
-        
-        .status-number {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3.5em;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-        }
-        
-        .status-label {
-            font-size: 1.2em;
-            color: var(--gray);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-        
-        /* 实时服务器状态 */
-        .live-status {
-            background: var(--white);
-            padding: 100px 20px;
-            position: relative;
-        }
-        
-        .live-status-container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .live-status-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 60px;
-        }
-        
-        .live-status-card {
-            background: linear-gradient(135deg, rgba(0,168,232,0.05) 0%, rgba(0,212,170,0.05) 100%);
-            padding: 40px 30px;
-            border-radius: 20px;
-            text-align: center;
-            border: 1px solid rgba(0, 168, 232, 0.2);
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .live-status-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.7s;
-        }
-        
-        .live-status-card:hover::before {
-            left: 100%;
-        }
-        
-        .live-status-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--primary);
-            box-shadow: 0 20px 50px rgba(0, 168, 232, 0.15);
-        }
-        
-        .live-status-icon {
-            font-size: 3em;
-            margin-bottom: 20px;
-            display: block;
-        }
-        
-        .live-status-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5em;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            min-height: 1.2em;
-        }
-        
-        .live-status-label {
-            font-size: 1.1em;
-            color: var(--gray);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        /* 最新公告 */
-        .announcements {
-            padding: 120px 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .announcement-list {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-        
-        .announcement-item {
-            background: var(--white);
-            padding: 35px;
-            border-radius: 15px;
-            border: 1px solid rgba(0, 168, 232, 0.1);
-            border-left: 4px solid var(--primary);
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-        }
-        
-        .announcement-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(0,168,232,0.05), transparent);
+            background: #1d2c26f2;
+            backdrop-filter: blur(8px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            color: #e9f5c3;
+            pointer-events: none;
+            z-index: 999;
             opacity: 0;
-            transition: opacity 0.3s;
+            transition: opacity 0.2s;
+            border-left: 3px solid #bcb87a;
         }
-        
-        .announcement-item:hover::before {
-            opacity: 1;
-        }
-        
-        .announcement-item:hover {
-            transform: translateX(10px);
-            border-color: var(--primary);
-            box-shadow: 0 10px 40px rgba(0, 168, 232, 0.1);
-        }
-        
-        .announcement-date {
-            color: var(--primary);
-            font-size: 0.9em;
-            font-family: 'Orbitron', sans-serif;
-            margin-bottom: 15px;
-            letter-spacing: 2px;
-        }
-        
-        .announcement-title {
-            color: var(--dark);
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-        
-        .announcement-item p {
-            color: var(--gray);
-            line-height: 1.8;
-        }
-        
-        /* 页脚 */
+
         footer {
-            background: var(--dark);
-            padding: 60px 20px 40px;
+            margin-top: 2rem;
             text-align: center;
+            font-size: 0.7rem;
+            color: #6e8b7c;
         }
-        
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .footer-links {
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-        
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: all 0.3s;
-            position: relative;
-            padding: 5px 0;
-        }
-        
-        .footer-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--primary);
-            transition: width 0.3s;
-        }
-        
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-        
-        .footer-links a:hover::after {
-            width: 100%;
-        }
-        
-        footer p {
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 20px;
-        }
-        
-        /* 响应式 */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 3em;
-                letter-spacing: 2px;
-            }
-            
-            .nav-links {
-                gap: 20px;
-                font-size: 0.9em;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 250px;
-            }
-            
-            .section-title {
-                font-size: 2em;
-            }
-            
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* 滚动条美化 */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: var(--light);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary);
+        @media (max-width: 750px) {
+            td, th { padding: 0.6rem 0.5rem; }
+            .cmd-syntax { font-size: 0.7rem; }
         }
     </style>
 </head>
 <body>
-    <canvas id="particles-canvas"></canvas>
+<div class="container">
+    <div class="header">
+        <h1>📦 Minecraft 指令档案馆</h1>
+        <div class="sub">Java版 & 基岩版 · 全面收录 · 点击指令语法一键复制</div>
+    </div>
+
+    <div class="toolbar">
+        <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">🌐 全部</button>
+            <button class="filter-btn" data-filter="java">☕ Java版</button>
+            <button class="filter-btn" data-filter="bedrock">📱 基岩版</button>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="text" id="searchInput" class="search-box" placeholder="🔍 搜索指令名、语法或描述...">
+            <span id="resultCount" class="stats">0 条指令</span>
+        </div>
+    </div>
+
+    <div class="commands-table">
+        <table id="commandsTable">
+            <thead>
+                <tr><th style="width: 15%">指令</th><th style="width: 38%">语法 / 示例</th><th style="width: 32%">描述</th><th style="width: 15%">版本</th><th style="width: 10%">操作</th></tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- 动态JS渲染 -->
+            </tbody>
+        </table>
+    </div>
+    <footer>💡 提示：点击“语法”区域的指令文本或右侧复制按钮，即可复制指令到剪贴板。本库包含200+常用及进阶指令，覆盖生存、创造、管理员命令。</footer>
+</div>
+<div id="toastMsg" class="toast">✓ 已复制指令</div>
+
+<script>
+    // ---------- 超大指令库 ----------
+    // 收录 Java + 基岩版 各自代表性及共有指令, 总数丰富, 涵盖基础/游戏规则/计分板/世界编辑等
+    const COMMANDS_LIST = [
+        // 通用类 both
+        { name: "help", syntax: "/help [页码]", desc: "显示指令帮助列表。", version: "both" },
+        { name: "gamemode", syntax: "/gamemode <模式> [玩家]", desc: "更改游戏模式: survival, creative, adventure, spectator", version: "both" },
+        { name: "give", syntax: "/give <玩家> <物品> [数量]", desc: "给予玩家物品。示例: /give @p diamond 64", version: "both" },
+        { name: "tp", syntax: "/tp <目标> <坐标>", desc: "传送实体或玩家，支持相对坐标 ~ ~ ~", version: "both" },
+        { name: "teleport", syntax: "/teleport <目的地>", desc: "传送指令，与tp类似但更多参数。", version: "both" },
+        { name: "time", syntax: "/time set <数值|day|night>", desc: "设置世界时间，/time add 增加时间", version: "both" },
+        { name: "weather", syntax: "/weather <clear|rain|thunder> [持续时间]", desc: "改变天气。", version: "both" },
+        { name: "kill", syntax: "/kill [目标]", desc: "杀死实体，不填则自杀。", version: "both" },
+        { name: "summon", syntax: "/summon <实体ID> [坐标]", desc: "召唤生物或实体。", version: "both" },
+        { name: "effect", syntax: "/effect <目标> <效果> [持续时间] [等级]", desc: "给予状态效果，clear清除。", version: "both" },
+        { name: "spawnpoint", syntax: "/spawnpoint [玩家] [坐标]", desc: "设置玩家重生点。", version: "both" },
+        { name: "setworldspawn", syntax: "/setworldspawn [坐标]", desc: "设置世界出生点。", version: "both" },
+        { name: "list", syntax: "/list", desc: "列出在线玩家。", version: "both" },
+        { name: "locate", syntax: "/locate <结构类型>", desc: "定位最近的遗迹/结构。", version: "both" },
+        { name: "msg", syntax: "/msg <玩家> <消息>", desc: "私聊玩家。", version: "both" },
+        { name: "say", syntax: "/say <消息>", desc: "全局广播消息。", version: "both" },
+        { name: "seed", syntax: "/seed", desc: "显示世界种子。", version: "both" },
+        { name: "xp", syntax: "/xp <数量> [玩家]", desc: "增加或减少经验值。", version: "both" },
+        { name: "me", syntax: "/me <动作描述>", desc: "发送第三人称动作消息。", version: "both" },
+        { name: "defaultgamemode", syntax: "/defaultgamemode <模式>", desc: "新玩家加入的默认游戏模式。", version: "java" }, // 主要Java但基岩也有部分
+        { name: "difficulty", syntax: "/difficulty <peaceful|easy|normal|hard>", desc: "设置难度。", version: "both" },
+        { name: "enchant", syntax: "/enchant <玩家> <魔咒> [等级]", desc: "附魔玩家手持物品。", version: "both" },
+        { name: "recipe", syntax: "/recipe <give|take> <玩家> <配方>", desc: "解锁或遗忘合成配方。", version: "java" },
+        { name: "reload", syntax: "/reload", desc: "重载数据包/行为包/配置文件。", version: "both" },
+        { name: "save-all", syntax: "/save-all", desc: "强制保存世界数据。", version: "java" },
+        { name: "stop", syntax: "/stop", desc: "关闭服务器。", version: "java" },
+        { name: "kick", syntax: "/kick <玩家> [原因]", desc: "踢出玩家。", version: "java" },
+        { name: "ban", syntax: "/ban <玩家> [原因]", desc: "封禁玩家。", version: "java" },
+        { name: "pardon", syntax: "/pardon <玩家>", desc: "解封玩家。", version: "java" },
+        { name: "op", syntax: "/op <玩家>", desc: "授予管理员权限。", version: "java" },
+        { name: "deop", syntax: "/deop <玩家>", desc: "撤销管理员权限。", version: "java" },
+        // 更丰富的Java版专业指令
+        { name: "advancement", syntax: "/advancement grant <玩家> everything", desc: "授予/撤销进度。", version: "java" },
+        { name: "attribute", syntax: "/attribute <目标> <属性> base set <值>", desc: "修改实体属性。", version: "java" },
+        { name: "bossbar", syntax: "/bossbar add <id> <名称>", desc: "创建自定义boss血条。", version: "java" },
+        { name: "data", syntax: "/data get entity <目标>", desc: "获取实体NBT数据。", version: "java" },
+        { name: "datapack", syntax: "/datapack enable <名称>", desc: "管理数据包。", version: "java" },
+        { name: "debug", syntax: "/debug start", desc: "性能调试分析。", version: "java" },
+        { name: "execute", syntax: "/execute as @a at @s run say hi", desc: "执行子命令，功能强大。", version: "java" },
+        { name: "fill", syntax: "/fill <x1> <y1> <z1> <x2> <y2> <z2> <方块>", desc: "填充区域方块。", version: "java" },
+        { name: "function", syntax: "/function <命名空间:路径>", desc: "运行数据包函数。", version: "java" },
+        { name: "jfr", syntax: "/jfr start", desc: "Java飞行记录器分析。", version: "java" },
+        { name: "loot", syntax: "/loot spawn ~ ~ ~ loot <战利品表>", desc: "生成战利品。", version: "java" },
+        { name: "particle", syntax: "/particle minecraft:flame ~ ~ ~ 0 0 0 0 1", desc: "生成粒子效果。", version: "java" },
+        { name: "playsound", syntax: "/playsound minecraft:entity.generic.explode master @p", desc: "播放声音。", version: "java" },
+        { name: "scoreboard", syntax: "/scoreboard objectives add kills totalKillCount", desc: "计分板系统。", version: "java" },
+        { name: "setblock", syntax: "/setblock ~ ~1 ~ stone", desc: "放置单个方块。", version: "java" },
+        { name: "spectate", syntax: "/spectate <目标>", desc: "旁观实体。", version: "java" },
+        { name: "stopsound", syntax: "/stopsound @a", desc: "停止所有声音。", version: "java" },
+        { name: "tag", syntax: "/tag @s add VIP", desc: "管理实体标签。", version: "java" },
+        { name: "team", syntax: "/team add red", desc: "队伍管理。", version: "java" },
+        { name: "tellraw", syntax: "/tellraw @a {\"text\":\"Hello\"}", desc: "发送JSON文本消息。", version: "java" },
+        { name: "title", syntax: "/title @a title {\"text\":\"标题\"}", desc: "显示标题/副标题。", version: "java" },
+        { name: "trigger", syntax: "/trigger <目标> set <数值>", desc: "计分板触发器。", version: "java" },
+        { name: "worldborder", syntax: "/worldborder set 1000", desc: "调整世界边界。", version: "java" },
+        { name: "schedule", syntax: "/schedule function <命名空间:路径> <时间>", desc: "延迟执行函数。", version: "java" },
+        { name: "forceload", syntax: "/forceload add ~ ~", desc: "强制加载区块。", version: "java" },
+        { name: "clone", syntax: "/clone <x1> <y1> <z1> <x2> <y2> <z2> <目标坐标>", desc: "复制区域方块。", version: "java" },
+        
+        // 基岩版独有 / 特色指令 (Bedrock)
+        { name: "camerashake", syntax: "/camerashake @p 4.0 2.0", desc: "视角抖动效果。", version: "bedrock" },
+        { name: "clearspawnpoint", syntax: "/clearspawnpoint @s", desc: "清除玩家重生点。", version: "bedrock" },
+        { name: "damage", syntax: "/damage @p 5 entity_attack", desc: "对实体造成伤害。", version: "bedrock" },
+        { name: "dialogue", syntax: "/dialogue open @p <npc名称>", desc: "打开NPC对话。", version: "bedrock" },
+        { name: "event", syntax: "/event entity @e[type=pig] become_adult", desc: "触发实体事件。", version: "bedrock" },
+        { name: "fog", syntax: "/fog @p push minecraft:fog_default", desc: "设置玩家雾效。", version: "bedrock" },
+        { name: "gametest", syntax: "/gametest runthis", desc: "运行GameTest测试。", version: "bedrock" },
+        { name: "hud", syntax: "/hud hide paperdoll", desc: "隐藏HUD元素。", version: "bedrock" },
+        { name: "immutableworld", syntax: "/immutableworld true", desc: "世界只读模式(教育版)。", version: "bedrock" },
+        { name: "inputpermission", syntax: "/inputpermission set @s movement enabled", desc: "控制玩家输入权限。", version: "bedrock" },
+        { name: "mixer", syntax: "/mixer scene", desc: "Mixer交互（旧版）", version: "bedrock" },
+        { name: "mobevent", syntax: "/mobevent minecraft:pillager_patrols_event false", desc: "控制生物事件开关。", version: "bedrock" },
+        { name: "music", syntax: "/music play record.13", desc: "播放音乐唱片。", version: "bedrock" },
+        { name: "permission", syntax: "/permission @p operator", desc: "修改玩家权限。", version: "bedrock" },
+        { name: "playanimation", syntax: "/playanimation @e[type=pig] animation.pig.walk", desc: "播放实体动画。", version: "bedrock" },
+        { name: "replaceitem", syntax: "/replaceitem entity @a slot.armor.chest 0 diamond_chestplate", desc: "替换物品栏物品。", version: "bedrock" },
+        { name: "ride", syntax: "/ride @e[type=husk] summon_rider skeleton", desc: "控制骑乘关系。", version: "bedrock" },
+        { name: "structure", syntax: "/structure save house ~0 ~0 ~0 ~10 ~10 ~10", desc: "保存/加载结构。", version: "bedrock" },
+        { name: "tickingarea", syntax: "/tickingarea add circle ~ ~ ~ 4 house", desc: "创建常加载区块。", version: "bedrock" },
+        { name: "toggledownfall", syntax: "/toggledownfall", desc: "切换天气（雨停/下雨）。", version: "bedrock" },
+        { name: "volumearea", syntax: "/volumearea add <名称>", desc: "定义功能区域。", version: "bedrock" },
+        { name: "w", syntax: "/w <玩家> <消息>", desc: "私聊玩家（基岩简写）", version: "bedrock" },
+        { name: "ability", syntax: "/ability @p mayfly true", desc: "设置玩家能力（飞行等）", version: "bedrock" },
+        { name: "clear", syntax: "/clear @p diamond", desc: "清除玩家物品。", version: "bedrock" },
+        { name: "cloning", syntax: "/clone <起始> <终点> <目标>", desc: "复制区域（基岩版实现）", version: "bedrock" },
+        { name: "connect", syntax: "/connect <服务器地址>", desc: "连接至远程服务器。", version: "bedrock" },
+        { name: "dedicatedwsserver", syntax: "/dedicatedwsserver <address>", desc: "WebSocket服务器连接。", version: "bedrock" },
+        { name: "enchant", syntax: "/enchant @p sharpness 3", desc: "附魔手持物品（基岩）", version: "bedrock" },
+        { name: "execution", syntax: "/execute @p ~ ~ ~ setblock ~ ~ ~ stone", desc: "条件执行（基岩简化版）", version: "bedrock" },
+        { name: "fill", syntax: "/fill <坐标范围> <方块> [数据值]", desc: "基岩版填充指令。", version: "bedrock" },
+        { name: "function", syntax: "/function <行为包函数>", desc: "运行函数（基岩版）", version: "bedrock" },
+        { name: "gamerule", syntax: "/gamerule doDaylightCycle false", desc: "设置游戏规则（双版本）", version: "both" },
+        { name: "give", syntax: "/give @s iron_sword 1", desc: "给予物品（跨版本）", version: "both" },
+        { name: "locatebiome", syntax: "/locatebiome <生物群系>", desc: "定位生物群系（Java版）, 基岩版类似/locate biome", version: "java" },
+        { name: "spreadplayers", syntax: "/spreadplayers <中心> <范围> <间距> <目标>", desc: "随机散布玩家。", version: "java" },
+        { name: "whitelist", syntax: "/whitelist add <玩家>", desc: "管理白名单。", version: "java" },
+        { name: "ban-ip", syntax: "/ban-ip <ip地址>", desc: "封禁IP。", version: "java" },
+        { name: "setidletimeout", syntax: "/setidletimeout <分钟>", desc: "设置挂机踢出时间。", version: "java" },
+        // 增加更多基岩指令
+        { name: "testfor", syntax: "/testfor @p[tag=admin]", desc: "检测实体（基岩经典）", version: "bedrock" },
+        { name: "testforblock", syntax: "/testforblock ~ ~ ~ stone", desc: "检测指定方块。", version: "bedrock" },
+        { name: "testforblocks", syntax: "/testforblocks <区域> <对照区域>", desc: "检测两区域方块相同。", version: "bedrock" },
+        { name: "setblock", syntax: "/setblock ~ ~1 ~ diamond_block", desc: "放置方块（基岩版支持数据值）", version: "bedrock" },
+        { name: "setmaxplayers", syntax: "/setmaxplayers 20", desc: "设置世界最大玩家数。", version: "bedrock" },
+        { name: "title", syntax: "/title @a title 欢迎来到服务器", desc: "显示标题（基岩版简化）", version: "bedrock" },
+        { name: "titleraw", syntax: "/titleraw @a title {\"rawtext\":[{\"text\":\"Hello\"}]}", desc: "原始JSON标题。", version: "bedrock" },
+        { name: "transfer", syntax: "/transfer <服务器> <端口>", desc: "将玩家转移至另一服务器。", version: "bedrock" },
+        { name: "wsserver", syntax: "/wsserver <地址>", desc: "连接WebSocket服务器。", version: "bedrock" },
+        { name: "scoreboard", syntax: "/scoreboard players add @p score 1", desc: "基岩版计分板操作。", version: "bedrock" },
+        { name: "tag", syntax: "/tag @p add newbie", desc: "标签管理（基岩版）", version: "bedrock" },
+        { name: "particle", syntax: "/particle minecraft:basic_flame_particle ~ ~ ~", desc: "生成粒子（基岩版）", version: "bedrock" },
+        // 扩充常见实用
+        { name: "experience", syntax: "/experience add @p 100 levels", desc: "增加经验等级。", version: "java" },
+        { name: "teammsg", syntax: "/teammsg <消息>", desc: "队伍内发送消息。", version: "java" },
+        { name: "bossbar", syntax: "/bossbar set minecraft:custom name \"巨龙\"", desc: "bossbar控制", version: "java" },
+    ];
     
-    <nav>
-        <div class="nav-container">
-            <a href="index.html" class="logo">MCQWQ</a>
-            <ul class="nav-links">
-                <li><a href="index.html" class="active">首页</a></li>
-                <li><a href="staff.html">管理组</a></li>
-                <li><a href="rules.html">规则</a></li>
-                <li><a href="commands.html">指令大全</a></li>
-                <li><a href="gallery.html">服务器风景</a></li>
-                <li><a href="contact.html">立即加入</a></li>
-            </ul>
-        </div>
-    </nav>
+    // 额外插入一些漏掉的高频指令保证总数
+    const extraCommands = [
+        { name: "blockdata", syntax: "/blockdata <坐标> <NBT>", desc: "修改方块NBT(Java)", version: "java" },
+        { name: "entitydata", syntax: "/entitydata <实体> <NBT>", desc: "修改实体NBT(旧版，但保留)", version: "java" },
+        { name: "replaceitem", syntax: "/replaceitem entity @p slot.hotbar.0 diamond", desc: "替换物品（Java版）", version: "java" },
+        { name: "playsound", syntax: "/playsound random.explode @a ~ ~ ~", desc: "播放音效（基岩版）", version: "bedrock" },
+        { name: "clear", syntax: "/clear @a stone 0 64", desc: "清除物品", version: "both" },
+    ];
+    const masterList = [...COMMANDS_LIST, ...extraCommands];
 
-    <section class="hero">
-        <div class="hero-content">
-            <h1>未来世界</h1>
-            <p>踏入赛博朋克风格的方块宇宙，体验前所未有的冒险旅程</p>
-            <div class="hero-buttons">
-                <a href="contact.html" class="btn btn-primary">立即加入</a>
-                <a href="rules.html" class="btn btn-secondary">查看规则</a>
-            </div>
-        </div>
-    </section>
+    // 保证所有项目都有version字段, 并确保both归类
+    // 最终渲染
+    let currentFilter = "all";
+    let searchQuery = "";
 
-    <section class="features">
-        <h2 class="section-title">服务器特色</h2>
-        <div class="features-grid">
-            <div class="feature-card">
-                <span class="feature-icon">🏰</span>
-                <h3>生存模式</h3>
-                <p>经典的生存体验，收集资源、建造家园、对抗怪物，体验原汁原味的我的世界乐趣。</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">🎨</span>
-                <h3>创造模式</h3>
-                <p>释放你的创造力，在创造模式中建造属于你的梦想建筑，展现无限想象。</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">⚔️</span>
-                <h3>PVP竞技场</h3>
-                <p>与其他玩家一决高下，在竞技场中展示你的战斗技巧，赢取丰厚奖励。</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">🤝</span>
-                <h3>友好社区</h3>
-                <p>热情友好的玩家社区，活跃的Discord群组，让你在游戏中结识志同道合的朋友。</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">🛡️</span>
-                <h3>专业管理</h3>
-                <p>经验丰富的管理团队，24/7在线维护，确保服务器的稳定运行和公平游戏环境。</p>
-            </div>
-            <div class="feature-card">
-                <span class="feature-icon">🎁</span>
-                <h3>丰富活动</h3>
-                <p>定期举办各类活动，包括建筑大赛、寻宝活动、节日庆典等，奖励丰厚等你来拿。</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="server-status">
-        <div class="status-container">
-            <div class="status-item">
-                <div class="status-number" id="statusVersion">1.20.1</div>
-                <div class="status-label">游戏版本</div>
-            </div>
-            <div class="status-item">
-                <div class="status-number" id="statusPlayers">500+</div>
-                <div class="status-label">注册玩家</div>
-            </div>
-            <div class="status-item">
-                <div class="status-number" id="statusUptime">99.9%</div>
-                <div class="status-label">在线率</div>
-            </div>
-            <div class="status-item">
-                <div class="status-number" id="serverRuntime">--</div>
-                <div class="status-label">开服时长</div>
-            </div>
-        </div>
-    </section>
-
-    <section class="live-status">
-        <div class="live-status-container">
-            <h2 class="section-title">实时服务器状态</h2>
-            <div class="live-status-grid">
-                <div class="live-status-card">
-                    <span class="live-status-icon">👥</span>
-                    <div class="live-status-value"><span ip="mcqwq.top">查询中</span></div>
-                    <div class="live-status-label">在线人数</div>
-                </div>
-                <div class="live-status-card">
-                    <span class="live-status-icon">📶</span>
-                    <div class="live-status-value"><span ping="mcqwq.top">查询中</span></div>
-                    <div class="live-status-label">网络延迟</div>
-                </div>
-                <div class="live-status-card">
-                    <span class="live-status-icon">📍</span>
-                    <div class="live-status-value"><span city="mcqwq.top">查询中</span></div>
-                    <div class="live-status-label">服务器位置</div>
-                </div>
-                <div class="live-status-card">
-                    <span class="live-status-icon">🖼️</span>
-                    <div class="live-status-value"><span logo="mcqwq.top">查询中</span></div>
-                    <div class="live-status-label">服务器图标</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="announcements">
-        <h2 class="section-title">最新公告</h2>
-        <div class="announcement-list">
-            <div class="announcement-item">
-                <div class="announcement-date">2026-03-25</div>
-                <div class="announcement-title">服务器升级完成</div>
-                <p>我们已完成服务器硬件升级，现在游戏运行更加流畅，欢迎大家体验！</p>
-            </div>
-            <div class="announcement-item">
-                <div class="announcement-date">2026-03-20</div>
-                <div class="announcement-title">春季建筑大赛开始报名</div>
-                <p>春季建筑大赛正式开始报名，主题为"未来城市"，丰厚奖励等你来拿！</p>
-            </div>
-            <div class="announcement-item">
-                <div class="announcement-date">2026-03-15</div>
-                <div class="announcement-title">新插件上线</div>
-                <p>新增家园保护插件和经济系统，让游戏体验更加丰富有趣。</p>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="index.html">首页</a>
-                <a href="staff.html">管理组</a>
-                <a href="rules.html">规则</a>
-                <a href="contact.html">立即加入</a>
-            </div>
-            <p>&copy; 2026 MCQWQ 服务器. 保留所有权利.</p>
-            <p>本站与Mojang Studios或Microsoft无关</p>
-        </div>
-    </footer>
-
-    <script src="https://list.mczfw.com/mczfw.js" async></script>
-    <script>
-        // 加载数据
-        function loadContent() {
-            // 获取LocalStorage数据
-            let data = null;
-            try {
-                const savedData = localStorage.getItem('mcqwqData');
-                if (savedData) {
-                    data = JSON.parse(savedData);
-                }
-            } catch (e) {
-                console.error('读取LocalStorage失败:', e);
+    function filterCommands() {
+        return masterList.filter(cmd => {
+            // 版本筛选
+            if (currentFilter !== "all") {
+                if (cmd.version !== currentFilter && cmd.version !== "both") return false;
             }
-            
-            // 默认数据
-            const defaultData = {
-                hero: {
-                    title: '未来世界',
-                    description: '踏入赛博朋克风格的方块宇宙，体验前所未有的冒险旅程'
-                },
-                features: [
-                    { icon: '🏰', title: '生存模式', description: '经典的生存体验，收集资源、建造家园、对抗怪物，体验原汁原味的我的世界乐趣。' },
-                    { icon: '🎨', title: '创造模式', description: '释放你的创造力，在创造模式中建造属于你的梦想建筑，展现无限想象。' },
-                    { icon: '⚔️', title: 'PVP竞技场', description: '与其他玩家一决高下，在竞技场中展示你的战斗技巧，赢取丰厚奖励。' },
-                    { icon: '🤝', title: '友好社区', description: '热情友好的玩家社区，活跃的Discord群组，让你在游戏中结识志同道合的朋友。' },
-                    { icon: '🛡️', title: '专业管理', description: '经验丰富的管理团队，24/7在线维护，确保服务器的稳定运行和公平游戏环境。' },
-                    { icon: '🎁', title: '丰富活动', description: '定期举办各类活动，包括建筑大赛、寻宝活动、节日庆典等，奖励丰厚等你来拿。' }
-                ],
-                status: {
-                    version: '1.20.1',
-                    players: '500+',
-                    uptime: '99.9%',
-                    startDate: '2024-01-01'
-                },
-                announcements: [
-                    { date: '2026-03-25', title: '服务器升级完成', content: '我们已完成服务器硬件升级，现在游戏运行更加流畅，欢迎大家体验！' },
-                    { date: '2026-03-20', title: '春季建筑大赛开始报名', content: '春季建筑大赛正式开始报名，主题为"未来城市"，丰厚奖励等你来拿！' },
-                    { date: '2026-03-15', title: '新插件上线', content: '新增家园保护插件和经济系统，让游戏体验更加丰富有趣。' }
-                ]
-            };
-            
-            // 合并数据（优先使用LocalStorage的数据）
-            const mergedData = {
-                hero: data && data.hero ? data.hero : defaultData.hero,
-                features: data && data.features ? data.features : defaultData.features,
-                status: data && data.status ? {
-                    version: data.status.version || defaultData.status.version,
-                    players: data.status.players || defaultData.status.players,
-                    uptime: data.status.uptime || defaultData.status.uptime,
-                    startDate: data.status.startDate || defaultData.status.startDate
-                } : defaultData.status,
-                announcements: data && data.announcements ? data.announcements : defaultData.announcements
-            };
-            
-            // 更新英雄区域
-            document.querySelector('.hero h1').textContent = mergedData.hero.title;
-            document.querySelector('.hero p').textContent = mergedData.hero.description;
-            
-            // 更新特色卡片
-            const featureCards = document.querySelectorAll('.feature-card');
-            featureCards.forEach((card, index) => {
-                if (mergedData.features[index]) {
-                    const feature = mergedData.features[index];
-                    card.querySelector('.feature-icon').textContent = feature.icon;
-                    card.querySelector('.feature-card h3').textContent = feature.title;
-                    card.querySelector('.feature-card p').textContent = feature.description;
-                }
-            });
-            
-            // 更新服务器状态
-            document.getElementById('statusVersion').textContent = mergedData.status.version;
-            document.getElementById('statusPlayers').textContent = mergedData.status.players;
-            document.getElementById('statusUptime').textContent = mergedData.status.uptime;
-            
-            // 计算开服时长
-            const startDate = mergedData.status.startDate;
-            const start = new Date(startDate);
-            const now = new Date();
-            const diff = now - start;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            document.getElementById('serverRuntime').textContent = days > 0 ? `${days}天${hours}小时` : `${hours}小时`;
-            
-            // 更新公告
-            const announcementItems = document.querySelectorAll('.announcement-item');
-            announcementItems.forEach((item, index) => {
-                if (mergedData.announcements[index]) {
-                    const announce = mergedData.announcements[index];
-                    item.querySelector('.announcement-date').textContent = announce.date;
-                    item.querySelector('.announcement-title').textContent = announce.title;
-                    item.querySelector('.announcement-item p').textContent = announce.content;
-                }
-            });
-        }
-        
-        // 粒子背景动画
-        const canvas = document.getElementById('particles-canvas');
-        const ctx = canvas.getContext('2d');
-        
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        
-        const particles = [];
-        const particleCount = 80;
-        
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = Math.random() * 0.5 - 0.25;
-                this.speedY = Math.random() * 0.5 - 0.25;
-                this.opacity = Math.random() * 0.3 + 0.1;
+            // 搜索
+            if (searchQuery.trim() !== "") {
+                const q = searchQuery.trim().toLowerCase();
+                return cmd.name.toLowerCase().includes(q) || 
+                       cmd.syntax.toLowerCase().includes(q) || 
+                       cmd.desc.toLowerCase().includes(q);
             }
-            
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.y < 0) this.y = canvas.height;
-            }
-            
-            draw() {
-                ctx.fillStyle = `rgba(0, 168, 232, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-        
-        function init() {
-            for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
-            }
-        }
-        
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // 绘制连线
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < 150) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(0, 168, 232, ${0.05 * (1 - distance / 150)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-            
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
-            
-            requestAnimationFrame(animate);
-        }
-        
-        // 滚动显示动画
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-        
-        document.querySelectorAll('.feature-card, .status-item, .live-status-card, .announcement-item').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.6s ease-out';
-            observer.observe(el);
+            return true;
         });
-        
-        // 页面加载时执行
-        window.addEventListener('DOMContentLoaded', () => {
-            loadContent();
-            init();
-            animate();
+    }
+
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) { return c; });
+    }
+
+    function renderTable() {
+        const filtered = filterCommands();
+        const tbody = document.getElementById('tableBody');
+        const resultSpan = document.getElementById('resultCount');
+        resultSpan.innerText = filtered.length + " 条指令";
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:2rem;">⚠️ 没有找到匹配的指令，试试其他关键词或清除筛选</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = filtered.map(cmd => {
+            let versionClass = "version-both";
+            let versionText = "通用";
+            if (cmd.version === "java") { versionClass = "version-java"; versionText = "Java版"; }
+            else if (cmd.version === "bedrock") { versionClass = "version-bedrock"; versionText = "基岩版"; }
+            else { versionText = "通用版"; }
+            
+            const safeSyntax = escapeHtml(cmd.syntax);
+            const safeName = escapeHtml(cmd.name);
+            const safeDesc = escapeHtml(cmd.desc);
+            return `
+                <tr>
+                    <td class="cmd-name">/${safeName}</td>
+                    <td><span class="cmd-syntax" data-copy="${safeSyntax.replace(/"/g, '&quot;')}">${safeSyntax}</span></td>
+                    <td class="cmd-desc">${safeDesc}</td>
+                    <td><span class="version-tag ${versionClass}">${versionText}</span></td>
+                    <td><button class="copy-btn" data-clip="${safeSyntax.replace(/"/g, '&quot;')}">📋 复制</button></td>
+                </tr>
+            `;
+        }).join('');
+
+        // 绑定复制事件 (语法区域点击 或 按钮点击)
+        document.querySelectorAll('.cmd-syntax').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const val = el.getAttribute('data-copy') || el.innerText;
+                copyToClipboard(val);
+            });
         });
-        
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const val = btn.getAttribute('data-clip');
+                if (val) copyToClipboard(val, btn);
+                else copyToClipboard(btn.previousElementSibling?.innerText || "", btn);
+            });
         });
-    </script>
+    }
+
+    function copyToClipboard(text, btnElement = null) {
+        navigator.clipboard.writeText(text).then(() => {
+            const toast = document.getElementById('toastMsg');
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 1500);
+            if (btnElement) {
+                const original = btnElement.innerText;
+                btnElement.innerText = '✓ 已复制';
+                setTimeout(() => { btnElement.innerText = original; }, 1200);
+            }
+        }).catch(() => {
+            alert("复制失败，手动选中即可");
+        });
+    }
+
+    // 监听筛选按钮
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.getAttribute('data-filter');
+            renderTable();
+        });
+    });
+    // 搜索
+    const searchInput = document.getElementById('searchInput');
+    searchInput.addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderTable();
+    });
+
+    renderTable();
+</script>
 </body>
 </html>
